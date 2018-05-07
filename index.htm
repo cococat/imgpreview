@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<!-- saved from url=(0050)http://211.140.7.173:8081/t/lyt/passport/demo.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no, email=no">
+	<title>美国绿卡速递</title>
+	<style>
+		.head{
+			color:#f00056;
+			font-size:20px;
+		}
+		.subhead{
+			padding-left: 50px;
+			font-size: 16px;
+			color:#000056;
+		}
+		canvas,img{
+			width:100%;
+		}
+		button,input,select{
+			max-width: 95%;
+			line-height: 20px;
+			font-size: 24px;
+			font-family:Helvetica Neue,Helvetica,Arial,PingFang SC,Hiragino Sans GB,WenQuanYi Micro Hei,Microsoft Yahei,sans-serif;
+			border:1px solid #000;
+			margin:5px;
+			border-radius: 5px;
+		}
+	</style>
+
+</head>
+<body>
+	<div class="head">
+		毛绒小猫的demo
+	</div>
+	<div class="subhead">--专注前端开发500年</div>
+	<div class="main">
+		请选择你的生日：<input type="date" id="birth"><br>
+		请输入你的姓：<input type="text" id="fname"><br>
+		请输入你的名：<input type="text" id="sname"><br>
+		请选择你的性别：<select id="xb">
+		<option value=""></option>
+  <option value="Male">Male</option>
+  <option value="Female">Female</option>
+</select><br>
+		<input type="file" accept="image/*" id="file" multiple="">
+		<br>
+		<button id="hecheng">合成图片</button>
+	</div>
+
+	<script type="text/javascript" src="./index/zepto.js"></script>
+	<script type="text/javascript">
+
+(function(){
+	var me,dateStr="",xb="",fname="",sname="";
+	/*test*/
+	var div = document.createElement("div");
+	$("body").append(div);
+	var img = document.createElement("img");
+	$("body").append(img);
+	img.style.display="none";
+	canvas = document.createElement("canvas");
+	canvas.width = 650;
+	canvas.height = 420;
+	$("body").append(canvas);
+	 context = canvas.getContext("2d");
+	context.font = "bold 19px Helvetica Neue,Helvetica,Arial,PingFang SC,Hiragino Sans GB,WenQuanYi Micro Hei,Microsoft Yahei,sans-serif";
+	img.src = 'index/background.png';
+	img.onload = function(){
+		context.drawImage(img,0,0,img.width,img.height,0,0,650,420);
+		context.textAlign="right";
+		context.fillText(fname,100,380,50);
+		context.textAlign="left";
+		context.fillText(dateStr,258,320);
+		context.fillText(sname,258,175,80);
+		context.fillText(sname,115,380,80);
+		context.fillText(fname,258,128,50);
+		context.fillText(xb,410,320);
+	}
+	if(typeof FileReader == undefined&&new FileReader().readAsDataURL) {
+		div.innerHTML = "不支持filereader";
+	}else{
+		div.innerHTML = "FileReader is ok请单击选择文件上传头像";
+		var reader = new FileReader();
+	}
+	
+	ctr = {
+		check : function(e){
+			var files = e.files;
+			var str = "";
+			for(var k=0;k<files.length;k++){
+				if(!/image\/\w+/.test(files[k].type)){
+					console.log(files[k].name+"不是图像文件!");
+				}else{
+					//此处可加入文件上传的代码
+					for(var i in files[k]){
+						str = "文件已上传成功";
+					}
+				//console.log("文件已上传,合成成功，请长按图片下载")
+				}
+			}
+			div.innerHTML = str;
+			reader.readAsDataURL(files[0]);
+			reader.onload = function(){
+				img.src = this.result;
+				//console.log(img.width,img.height);
+				img.onload=function(){
+					context.drawImage(img,0,0,img.width,img.height,47,140,156,210);
+					clear();
+					img.onload = null;}
+			}
+			
+		},
+		onchange:function (e) {
+			ctr.check(e);
+		}
+	}
+	$("#file").bind("change",function(e){
+		ctr.onchange.call(this,e.target);
+	});
+
+	$("#birth").bind("change",function(e){
+		
+		var date = new Date(e.target.value);
+		dateStr  =  date.toUTCString().substr(5,12);
+		clear();
+		
+	});
+	$("#fname").bind("change",function(e){
+		//console.log(e.target);
+		fname = e.target.value;	
+		clear();	
+	});
+	$("#sname").bind("change",function(e){
+		//console.log(e.target);
+		sname = e.target.value;
+		clear();
+	});
+	$("#xb").bind("change",function(e){
+		//console.log(e.target);
+		xb = e.target.value;
+		clear();
+	});
+	$("#hecheng").click(function(e){
+		img.src = canvas.toDataURL("image/png");
+		canvas.style.display="none";
+		img.style.display="";
+		$(div).html("图片合成成功，请长按图片下载")
+	});
+	var clear = function(){
+		img.src = 'index/background.png';
+		$(div).html("FileReader is ok请单击选择文件上传头像")
+		context.drawImage(img,0,0,img.width,img.height,0,0,650,420);
+		context.textAlign="right";
+		context.fillText(fname,100,380,50);
+		context.textAlign="left";
+		context.fillText(dateStr,258,320);
+		context.fillText(sname,258,175,80);
+		context.fillText(sname,115,380,80);
+		context.fillText(fname,258,128,50);
+		context.fillText(xb,410,320);
+	};
+	
+})();
+
+	</script><div>FileReader is ok请单击选择文件上传头像</div><img src="./index/background.png" style="display: none;"><canvas width="650" height="420"></canvas>
+</body></html>
